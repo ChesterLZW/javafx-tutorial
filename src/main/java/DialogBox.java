@@ -11,6 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.shape.Circle;
 
 /**
  * Represents a dialog box containing a speaker's image and message.
@@ -33,6 +34,7 @@ public class DialogBox extends HBox {
 
         dialog.setText(text);
         displayPicture.setImage(image);
+        displayPicture.setClip(new Circle(49.5, 49.5, 49.5));
     }
 
     /**
@@ -43,15 +45,39 @@ public class DialogBox extends HBox {
         Collections.reverse(children);
         getChildren().setAll(children);
         setAlignment(Pos.TOP_LEFT);
+        dialog.getStyleClass().add("reply-label");
+    }
+
+    /**
+     * Applies a reply color based on the kind of command entered.
+     */
+    private void changeDialogStyle(String commandType) {
+        switch (commandType) {
+        case "AddCommand":
+            dialog.getStyleClass().add("add-label");
+            break;
+        case "ChangeMarkCommand":
+            dialog.getStyleClass().add("marked-label");
+            break;
+        case "DeleteCommand":
+            dialog.getStyleClass().add("delete-label");
+            break;
+        case "Error":
+            dialog.getStyleClass().add("error-label");
+            break;
+        default:
+            break;
+        }
     }
 
     public static DialogBox getUserDialog(String text, Image image) {
         return new DialogBox(text, image);
     }
 
-    public static DialogBox getDukeDialog(String text, Image image) {
+    public static DialogBox getDukeDialog(String text, Image image, String commandType) {
         DialogBox dialogBox = new DialogBox(text, image);
         dialogBox.flip();
+        dialogBox.changeDialogStyle(commandType);
         return dialogBox;
     }
 }
